@@ -1,3 +1,5 @@
 # Files and Folders
 *.env
 /data/*
+
+venv
