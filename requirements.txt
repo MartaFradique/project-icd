@@ -5,3 +5,7 @@ matplotlib
 seaborn
 gensim  
 scikit-learn
+pyLDAvis
+contractions
+spacy
+wordcloud
