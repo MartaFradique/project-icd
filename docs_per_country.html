@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #vis.vega-embed {
+      width: 100%;
+      display: flex;
+    }
+
+    #vis.vega-embed details,
+    #vis.vega-embed details summary {
+      position: relative;
+    }
+  </style>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5.16.3"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+  <div id="vis"></div>
+  <script>
+    (function(vegaEmbed) {
+      var spec = {"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "data": {"name": "data-a77015e3445203afb54ce62345afc0f3"}, "mark": {"type": "bar"}, "encoding": {"x": {"field": "number of articles", "type": "quantitative"}, "y": {"field": "country", "sort": "-x", "type": "nominal"}}, "transform": [{"window": [{"op": "rank", "field": "number of articles", "as": "rank"}], "sort": [{"field": "number of articles", "order": "descending"}]}, {"filter": "(datum.rank <= 5)"}], "$schema": "https://vega.github.io/schema/vega-lite/v5.16.3.json", "datasets": {"data-a77015e3445203afb54ce62345afc0f3": [{"country": "Italy", "number of articles": 22}, {"country": "China", "number of articles": 20}, {"country": "Greece", "number of articles": 16}, {"country": "India", "number of articles": 11}, {"country": "United States", "number of articles": 7}, {"country": "Germany", "number of articles": 6}, {"country": "France", "number of articles": 5}, {"country": "United Kingdom", "number of articles": 5}, {"country": "Morocco", "number of articles": 4}, {"country": "Spain", "number of articles": 4}, {"country": "South Korea", "number of articles": 4}, {"country": "Japan", "number of articles": 4}, {"country": "Malaysia", "number of articles": 3}, {"country": "Canada", "number of articles": 3}, {"country": "Argentina", "number of articles": 2}, {"country": "Netherlands", "number of articles": 2}, {"country": "Thailand", "number of articles": 2}, {"country": "Pakistan", "number of articles": 2}, {"country": "Colombia", "number of articles": 1}, {"country": "Mexico", "number of articles": 1}, {"country": "Iran", "number of articles": 1}, {"country": "Slovenia", "number of articles": 1}, {"country": "Poland", "number of articles": 1}, {"country": "Hungary", "number of articles": 1}, {"country": "Indonesia", "number of articles": 1}, {"country": "Russia", "number of articles": 1}, {"country": "Egypt", "number of articles": 1}, {"country": "Ireland", "number of articles": 1}, {"country": "Vietnam", "number of articles": 1}, {"country": "Portugal", "number of articles": 1}]}};
+      var embedOpt = {"mode": "vega-lite"};
+
+      function showError(el, error){
+          el.innerHTML = ('<div style="color:red;">'
+                          + '<p>JavaScript Error: ' + error.message + '</p>'
+                          + "<p>This usually means there's a typo in your chart specification. "
+                          + "See the javascript console for the full traceback.</p>"
+                          + '</div>');
+          throw error;
+      }
+      const el = document.getElementById('vis');
+      vegaEmbed("#vis", spec, embedOpt)
+        .catch(error => showError(el, error));
+    })(vegaEmbed);
+
+  </script>
+</body>
+</html>
