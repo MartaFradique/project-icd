@@ -4,6 +4,7 @@ import plost
 import matplotlib.pyplot as plt
 import pydeck as pdk
 import plotly.express as px
+from wordcloud import WordCloud
 
 from streamlit.components.v1 import components as components
 import folium
@@ -17,7 +18,7 @@ with open('style.css') as f:
     
 
 ##first row 
-c1, c2 = st.columns((7,3))
+c1, c2 = st.columns((5,5))
 with c1:
    # Sample data for horizontal bar chart
     bar_data = pd.DataFrame({
@@ -49,39 +50,98 @@ with c1:
     # Display the bar chart using Streamlit
     st.pyplot(fig)
 
-
-
  
 with c2:
-    # Sample data for vertical bar chart
+     # Sample data for horizontal bar chart
     bar_data = pd.DataFrame({
-        'Category': ['A', 'B', 'C', 'D'],
-        'Values': [23, 45, 56, 78]
+        'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
+        'Values': [23, 45, 56, 78, 12, 34, 65]
     })
 
-    # Create a smaller vertical bar chart using matplotlib with pastel colors
-    fig, ax = plt.subplots(figsize=(4, 4))  # Set figure size to make it smaller
+    # Create a horizontal bar chart with thin bars and reduced spacing
+    fig, ax = plt.subplots(figsize=(8, 4))  # Set figure size to make it smaller
     pastel_colors = plt.cm.get_cmap('Pastel1', len(bar_data))
-    bars = ax.bar(bar_data['Category'], bar_data['Values'], color=pastel_colors.colors, width=0.5)  # Adjust bar width
+    bars = ax.barh(bar_data['Category'], bar_data['Values'], color=pastel_colors.colors, height=0.2)  # Adjust bar height for thin bars
+
+    # Display the values on top of each bar
+    for i, val in enumerate(bar_data['Values']):
+        ax.text(val, i, str(val), ha='left', va='center', fontsize=10)  # Display values on bars
 
     # Customize appearance: Remove background gridlines and spines
     ax.grid(False)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_visible(False)  # Hide the y-axis line
 
-    # Set labels and title
-    ax.set_xlabel('Category', fontsize=12)
-    ax.set_ylabel('Values', fontsize=12)
-    ax.set_title('Vertical Bar Chart', fontsize=14)
+    # Hide x-axis line and labels
+    ax.xaxis.set_visible(False)
 
-    # Adjust tick label size
-    ax.tick_params(axis='both', which='major', labelsize=10)
+    # Set y-axis label and title
+    ax.set_title('Horizontal Bar Chart', fontsize=14)
 
     # Display the bar chart using Streamlit
     st.pyplot(fig)
 
+##################################################
+# Function to generate word cloud
 
 
+
+# first row
+c1, c2 = st.columns((3, 7))
+with c1:
+    seattle_weather = pd.read_csv('https://raw.githubusercontent.com/tvst/plost/master/data/seattle-weather.csv', parse_dates=['date'])
+    stocks = pd.read_csv('https://raw.githubusercontent.com/dataprofessor/data/master/stocks_toy.csv')
+    donut_theta = st.selectbox('Select data', ('q2', 'q3'))
+    st.markdown('### Donut chart')
+    plost.donut_chart(
+        data=stocks,
+        theta=donut_theta,
+        color='company',
+        legend='bottom', 
+        use_container_width=True)
+
+with c2:
+    st.title('Word Cloud Generator from Dataset')
+    def generate_wordcloud(data):
+        text = ' '.join(data)
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.imshow(wordcloud, interpolation='bilinear')
+        ax.axis('off')
+        st.pyplot(fig)
+
+
+    # Streamlit app
+    
+    # Dropdown menu to select file
+    selected_file = st.selectbox("Select file", ["Italy", "China", "France", "Gemany", "Spain", "India", "Mexico"])
+
+    file_mapping = {
+        "Italy": "icd_marta_ana_scopus_edited.csv",
+        "China": "scopus3.csv",
+        "France": "icd_marta_ana_scopus_edited.csv",
+        "Germany": "icd_marta_ana_scopus_edited.csv",
+        "Spain": "icd_marta_ana_scopus_edited.csv",
+        "India": "icd_marta_ana_scopus_edited.csv",
+        "Mexico": "icd_marta_ana_scopus_edited.csv"
+    }
+
+    if selected_file in file_mapping:
+        file_path = file_mapping[selected_file]
+    else:
+        st.error("Please select a valid file")
+
+
+    data = pd.read_csv(file_path)
+    # st.write(data)  # Display the uploaded data
+
+    text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
+    text_data = data[text_column].dropna().tolist()
+    generate_wordcloud(text_data)
+
+
+##################################################
 # Row A
 st.markdown('### Metrics')
 col1, col2, col3 = st.columns(3)
