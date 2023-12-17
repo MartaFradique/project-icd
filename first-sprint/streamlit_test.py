@@ -15,6 +15,7 @@ filtered_sum = chart_data["Country"].value_counts().reset_index()
 
 filtered_sum.columns = ['Country', 'Document Count']
 top_10_data = filtered_sum.head(10)
+print(top_10_data)
 
 merged_data = pd.merge(top_10_data, top_10_data_unesco, on="Country", suffixes=('_file1', '_file2'))
 print(merged_data)
