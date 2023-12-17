@@ -26,10 +26,8 @@ st.title("Ana e Marta Dashboard")
 c1, c2, c3, c4 = st.columns((1, 5, 3, 1))
 with c1:
      st.write("") 
-
-# Data for countries and their information
 with c2:
-    
+    # Data for countries and their information
     countries = ['Italy', 'Spain', 'France', 'Germany', 'China', 'India', 'Mexico']
     info1 = [20, 30, 25, 35, 28, 22, 38]  # Data for the first type of information
     info2 = [40, 35, 30, 45, 32, 27, 42]  # Data for the second type of information
@@ -67,8 +65,6 @@ with c2:
     # Display the chart using Streamlit
     st.pyplot(fig)
 
-    #############################
-
 with c3:
     # Sample data for horizontal bar chart
     bar_data = pd.DataFrame({
@@ -77,7 +73,7 @@ with c3:
     })
 
     # Create a horizontal bar chart with thin bars and reduced spacing
-    fig, ax = plt.subplots(figsize=(8, 4))  # Set figure size to make it smaller
+    fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size to make it smaller and match height
     pastel_colors = plt.cm.get_cmap('Pastel1', len(bar_data))
     bars = ax.barh(bar_data['Category'], bar_data['Values'], color=pastel_colors.colors, height=0.2)  # Adjust bar height for thin bars
 
@@ -109,7 +105,7 @@ with c4:
 
 
 # first row
-c1, c2, c3 = st.columns((1, 8, 1))
+c1, c2, c3, c4 = st.columns((1, 6,2, 1))
 with c1:
      st.write("") 
     # # Creating a large white space using an empty placeholder with custom CSS
@@ -157,8 +153,25 @@ with c2:
     text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
     text_data = data[text_column].dropna().tolist()
     generate_wordcloud(text_data)
-
 with c3:
+    st.markdown('### Metrics')
+
+
+    with st.container():
+        # Metric 1
+        with st.column():
+            st.metric("Temperature", "70 °F", "1.2 °F")
+
+        # Metric 2
+        with st.column():
+            st.metric("Wind", "9 mph", "-8%")
+
+        # Metric 3
+        with st.column():
+            st.metric("Humidity", "86%", "4%")
+
+
+with c4:
      st.write("") 
     # # Creating a large white space using an empty placeholder with custom CSS
     # placeholder = st.empty()
@@ -167,41 +180,39 @@ with c3:
     #     unsafe_allow_html=True
     # )
 
-##################################################
-# Row A
-st.markdown('### Metrics')
-col1, col2, col3 = st.columns(3)
-col1.metric("Temperature", "70 °F", "1.2 °F")
-col2.metric("Wind", "9 mph", "-8%")
-col3.metric("Humidity", "86%", "4%")
-
 
 
 #############################################################################################################################
     
 # Sample data for filtered_df
-    
 
-np.random.seed(42)  # Set seed for reproducibility
+c1, c2, c3 = st.columns((1, 8, 1))
+with c1:
+     st.write("") 
+with c2:
 
-regions = np.random.choice(['North', 'South', 'East', 'West'], size=100)
-categories = np.random.choice(['Electronics', 'Clothing', 'Furniture'], size=100)
-sub_categories = np.random.choice(['Phones', 'Laptops', 'Shirts', 'Chairs'], size=100)
-sales = np.random.randint(100, 1000, size=100)
+    np.random.seed(42)  # Set seed for reproducibility
 
-filtered_df = pd.DataFrame({
-    'Region': regions,
-    'Category': categories,
-    'Sub-Category': sub_categories,
-    'Sales': sales
-})
+    regions = np.random.choice(['North', 'South', 'East', 'West'], size=100)
+    categories = np.random.choice(['Electronics', 'Clothing', 'Furniture'], size=100)
+    sub_categories = np.random.choice(['Phones', 'Laptops', 'Shirts', 'Chairs'], size=100)
+    sales = np.random.randint(100, 1000, size=100)
+
+    filtered_df = pd.DataFrame({
+        'Region': regions,
+        'Category': categories,
+        'Sub-Category': sub_categories,
+        'Sales': sales
+    })
 
 
-st.subheader("Hierarchical view of Sales using TreeMap")
-fig3 = px.treemap(filtered_df, path = ["Region","Category","Sub-Category"], values = "Sales",hover_data = ["Sales"],
-                  color = "Sub-Category")
-fig3.update_layout(width = 800, height = 650)
-st.plotly_chart(fig3, use_container_width=True)
+    st.subheader("Hierarchical view of Sales using TreeMap")
+    fig3 = px.treemap(filtered_df, path = ["Region","Category","Sub-Category"], values = "Sales",hover_data = ["Sales"],
+                    color = "Sub-Category")
+    fig3.update_layout(width = 800, height = 650)
+    st.plotly_chart(fig3, use_container_width=True)
+with c3:
+     st.write("") 
 #############################################################################################################################
 
 
