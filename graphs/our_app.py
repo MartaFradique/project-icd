@@ -83,46 +83,7 @@ with c2:
     # st.markdown(f"Documents per inscribed UNESCO property ratio ({selected_country}): **{ratio.values[0]}**")
     st.markdown(f"##### **{ratio.values[0]}** scientific papers per inscribed UNESCO property")
 
-# with c3:
-#     # Sample data for horizontal bar chart
-#     bar_data = pd.DataFrame({
-#         'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
-#         'Values': [23, 45, 56, 78, 12, 34, 65]
-#     })
 
-#     # Create a horizontal bar chart with thin bars and reduced spacing
-#     fig, ax = plt.subplots(figsize=(8, 6))  # Set figure size to make it smaller and match height
-#     pastel_colors = plt.cm.get_cmap('Pastel1', len(bar_data))
-#     bars = ax.barh(bar_data['Category'], bar_data['Values'], color=pastel_colors.colors, height=0.2)  # Adjust bar height for thin bars
-
-#     # Display the values on top of each bar
-#     for i, val in enumerate(bar_data['Values']):
-#         ax.text(val, i, str(val), ha='left', va='center', fontsize=10)  # Display values on bars
-
-#     # Customize appearance: Remove background gridlines and spines
-#     ax.grid(False)
-#     ax.spines['top'].set_visible(False)
-#     ax.spines['right'].set_visible(False)
-#     ax.spines['left'].set_visible(False)  # Hide the y-axis line
-
-#     # Hide x-axis line and labels
-#     ax.xaxis.set_visible(False)
-
-#     # Set y-axis label and title
-#     ax.set_title('Horizontal Bar Chart', fontsize=14)
-
-#     # Display the bar chart using Streamlit
-#     st.pyplot(fig)
-# with c4:
-#      st.write("") 
-#     # Calculate the ratio (Documents per Site)
-#     ratio = round(selected_data['Document Count'] / selected_data['Properties inscribed'],2)
-
-#     # Display the ratio
-#     # st.markdown(f"Documents per inscribed UNESCO property ratio ({selected_country}): **{ratio.values[0]}**")
-#     st.markdown(f"##### **{ratio.values[0]}** scientific papersz     per inscribed UNESCO property")
-
-#     #############################
 
 
 c1, c2 = st.columns((7, 3))
@@ -155,28 +116,6 @@ with c1:
     # Dropdown menu to select file
     selected_file = st.selectbox("Select country", unique_countries_lst)
     lda_model = lda_unique_country(selected_file)
-    # file_mapping = {
-    #     "Italy": "icd_marta_ana_scopus_edited.csv",
-    #     "China": "scopus3.csv",
-    #     "France": "icd_marta_ana_scopus_edited.csv",
-    #     "Germany": "icd_marta_ana_scopus_edited.csv",
-    #     "Spain": "icd_marta_ana_scopus_edited.csv",
-    #     "India": "icd_marta_ana_scopus_edited.csv",
-    #     "Mexico": "icd_marta_ana_scopus_edited.csv"
-    # }
-
-    # if selected_file in file_mapping:
-    #     file_path = file_mapping[selected_file]
-    # else:
-    #     st.error("Please select a valid file")
-
-
-    # data = pd.read_csv(file_path)
-    # # st.write(data)  # Display the uploaded data
-
-    # text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
-    # text_data = data[text_column].dropna().tolist()
-    # Assuming lda_model is your trained LDA model
     topics = lda_model.show_topics()  # Adjust the number of words as needed
     topic_words = []
     for topic in topics:
@@ -191,58 +130,39 @@ with c1:
 
 with c2:
      st.write("") 
-    # # Creating a large white space using an empty placeholder with custom CSS
-    # placeholder = st.empty()
-    # placeholder.markdown(
-    #     '<style>div.css-1l02zno {height: 75px;}</style>',
-    #     unsafe_allow_html=True
-    # )
 
 
 
 #############################################################################################################################
 
 
-##first row 
-# c1, c2 = st.columns((5,5))
-# with c1:
-#    # Sample data for horizontal bar chart
-#     bar_data = pd.DataFrame({
-#         'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
-#         'Values': [23, 45, 56, 78, 12, 34, 65]
-#     })
+# Sample data: Country names and some dummy data
+data = {
+    'country': ['USA', 'Canada', 'Brazil', 'UK', 'Germany', 'China', 'India'],
+    'info': ['Info about USA', 'Info about Canada', 'Info about Brazil',
+             'Info about UK', 'Info about Germany', 'Info about China', 'Info about India']
+}
 
-#     # Display the bar chart using Streamlit
-#     st.pyplot(fig)
+df = pd.DataFrame(data)
 
- 
-# with c2:
-#      # Sample data for horizontal bar chart
-#     bar_data = pd.DataFrame({
-#         'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
-#         'Values': [23, 45, 56, 78, 12, 34, 65]
-#     })
+# Streamlit layout with columns
+c1, c2 = st.columns((1, 9))
 
-#     # Create a horizontal bar chart with thin bars and reduced spacing
-#     fig, ax = plt.subplots(figsize=(8, 4))  # Set figure size to make it smaller
-#     pastel_colors = plt.cm.get_cmap('Pastel1', len(bar_data))
-#     bars = ax.barh(bar_data['Category'], bar_data['Values'], color=pastel_colors.colors, height=0.2)  # Adjust bar height for thin bars
+with c1:
+    st.write("")  # Empty column
+with c2:
+    # Creating the world map
+    fig = px.choropleth(df, locations="country", locationmode="country names",
+                        hover_name="country", hover_data=["info"],
+                        color="country",  # Assigns a unique color to each country
+                        projection="natural earth")
+    # Increase the size of the figure
+    fig.update_layout(width=1200, height=900)
+    
+    # Increase font size for subtitles and annotations
+    fig.update_layout(
+        title_font_size=20,
+        font=dict(size=18)
+    )
 
-#     # Display the values on top of each bar
-#     for i, val in enumerate(bar_data['Values']):
-#         ax.text(val, i, str(val), ha='left', va='center', fontsize=10)  # Display values on bars
-
-#     # Customize appearance: Remove background gridlines and spines
-#     ax.grid(False)
-#     ax.spines['top'].set_visible(False)
-#     ax.spines['right'].set_visible(False)
-#     ax.spines['left'].set_visible(False)  # Hide the y-axis line
-
-#     # Hide x-axis line and labels
-#     ax.xaxis.set_visible(False)
-
-#     # Set y-axis label and title
-#     ax.set_title('Horizontal Bar Chart', fontsize=14)
-
-#     # Display the bar chart using Streamlit
-#     st.pyplot(fig)
+    st.plotly_chart(fig, use_container_width=False)  # Set use_container_width to False
