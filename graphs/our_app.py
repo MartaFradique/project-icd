@@ -1,13 +1,10 @@
 import streamlit as st
 import pandas as pd
-import plost
 import matplotlib.pyplot as plt
 import pydeck as pdk
 import plotly.express as px
 from wordcloud import WordCloud
-
 from streamlit.components.v1 import components as components
-import folium
 import numpy as np
 
 data_scopus = pd.read_csv('../first-sprint/icd_marta_ana_scopus_edited.csv');
@@ -73,9 +70,16 @@ with c1:
 with c2:
      # Selector for choosing the country
     selected_country = st.selectbox('Select a country:', top_10_merged_data['Country'].unique())
-    
+
     # Filter data based on selected country
     selected_data = top_10_merged_data[top_10_merged_data['Country'] == selected_country]
+
+    # Calculate the ratio (Documents per Site)
+    ratio = round(selected_data['Document Count'] / selected_data['Properties inscribed'],2)
+
+    # Display the ratio
+    # st.markdown(f"Documents per inscribed UNESCO property ratio ({selected_country}): **{ratio.values[0]}**")
+    st.markdown(f"##### **{ratio.values[0]}** scientific papers per inscribed UNESCO property")
 
 # with c3:
 #     # Sample data for horizontal bar chart
@@ -178,23 +182,6 @@ with c2:
     text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
     text_data = data[text_column].dropna().tolist()
     generate_wordcloud(text_data)
-with c3:
-    st.markdown('### Metrics')
-
-
-    with st.container():
-        # Metric 1
-        with st.column():
-            st.metric("Temperature", "70 °F", "1.2 °F")
-
-        # Metric 2
-        with st.column():
-            st.metric("Wind", "9 mph", "-8%")
-
-        # Metric 3
-        with st.column():
-            st.metric("Humidity", "86%", "4%")
-
 
 with c4:
      st.write("") 
@@ -208,49 +195,16 @@ with c4:
 
 
 #############################################################################################################################
-    
-# Sample data for filtered_df
-
-c1, c2, c3 = st.columns((1, 8, 1))
-with c1:
-     st.write("") 
-with c2:
-
-    np.random.seed(42)  # Set seed for reproducibility
-
-    regions = np.random.choice(['North', 'South', 'East', 'West'], size=100)
-    categories = np.random.choice(['Electronics', 'Clothing', 'Furniture'], size=100)
-    sub_categories = np.random.choice(['Phones', 'Laptops', 'Shirts', 'Chairs'], size=100)
-    sales = np.random.randint(100, 1000, size=100)
-
-    filtered_df = pd.DataFrame({
-        'Region': regions,
-        'Category': categories,
-        'Sub-Category': sub_categories,
-        'Sales': sales
-    })
-
-#     # Hide x-axis line and labels
-#     ax.xaxis.set_visible(False)
-
-    st.subheader("Hierarchical view of Sales using TreeMap")
-    fig3 = px.treemap(filtered_df, path = ["Region","Category","Sub-Category"], values = "Sales",hover_data = ["Sales"],
-                    color = "Sub-Category")
-    fig3.update_layout(width = 800, height = 650)
-    st.plotly_chart(fig3, use_container_width=True)
-with c3:
-     st.write("") 
-#############################################################################################################################
 
 
 ##first row 
-c1, c2 = st.columns((5,5))
-with c1:
-   # Sample data for horizontal bar chart
-    bar_data = pd.DataFrame({
-        'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
-        'Values': [23, 45, 56, 78, 12, 34, 65]
-    })
+# c1, c2 = st.columns((5,5))
+# with c1:
+#    # Sample data for horizontal bar chart
+#     bar_data = pd.DataFrame({
+#         'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
+#         'Values': [23, 45, 56, 78, 12, 34, 65]
+#     })
 
 #     # Display the bar chart using Streamlit
 #     st.pyplot(fig)
