@@ -1,14 +1,15 @@
 import streamlit as st
 import pandas as pd
-import plost
 import matplotlib.pyplot as plt
 import pydeck as pdk
 import plotly.express as px
 from wordcloud import WordCloud
+<<<<<<< HEAD
 import nltk
 from main2 import unique_countries, lda_unique_country
+=======
+>>>>>>> acadcd28be03965b29a39737732bcaa22d4408c8
 from streamlit.components.v1 import components as components
-import folium
 import numpy as np
 unique_countries_lst = unique_countries()
 data_scopus = pd.read_csv('../first-sprint/icd_marta_ana_scopus_edited.csv')
@@ -74,9 +75,16 @@ with c1:
 with c2:
      # Selector for choosing the country
     selected_country = st.selectbox('Select a country:', top_10_merged_data['Country'].unique())
-    
+
     # Filter data based on selected country
     selected_data = top_10_merged_data[top_10_merged_data['Country'] == selected_country]
+
+    # Calculate the ratio (Documents per Site)
+    ratio = round(selected_data['Document Count'] / selected_data['Properties inscribed'],2)
+
+    # Display the ratio
+    # st.markdown(f"Documents per inscribed UNESCO property ratio ({selected_country}): **{ratio.values[0]}**")
+    st.markdown(f"##### **{ratio.values[0]}** scientific papers per inscribed UNESCO property")
 
 # with c3:
 #     # Sample data for horizontal bar chart
@@ -155,6 +163,7 @@ with c2:
     # Streamlit app
     
     # Dropdown menu to select file
+<<<<<<< HEAD
     selected_file = st.selectbox("Select file", unique_countries_lst)
     lda_model = lda_unique_country(selected_file)
     # file_mapping = {
@@ -205,6 +214,32 @@ with c3:
         with st.column():
             st.metric("Humidity", "86%", "4%")
 
+=======
+    selected_file = st.selectbox("Select file", ["Italy", "China", "France", "Gemany", "Spain", "India", "Mexico"])
+
+    file_mapping = {
+        "Italy": "icd_marta_ana_scopus_edited.csv",
+        "China": "scopus3.csv",
+        "France": "icd_marta_ana_scopus_edited.csv",
+        "Germany": "icd_marta_ana_scopus_edited.csv",
+        "Spain": "icd_marta_ana_scopus_edited.csv",
+        "India": "icd_marta_ana_scopus_edited.csv",
+        "Mexico": "icd_marta_ana_scopus_edited.csv"
+    }
+
+    if selected_file in file_mapping:
+        file_path = file_mapping[selected_file]
+    else:
+        st.error("Please select a valid file")
+
+
+    data = pd.read_csv(file_path)
+    # st.write(data)  # Display the uploaded data
+
+    text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
+    text_data = data[text_column].dropna().tolist()
+    generate_wordcloud(text_data)
+>>>>>>> acadcd28be03965b29a39737732bcaa22d4408c8
 
 with c4:
      st.write("") 
@@ -218,49 +253,16 @@ with c4:
 
 
 #############################################################################################################################
-    
-# Sample data for filtered_df
-
-c1, c2, c3 = st.columns((1, 8, 1))
-with c1:
-     st.write("") 
-with c2:
-
-    np.random.seed(42)  # Set seed for reproducibility
-
-    regions = np.random.choice(['North', 'South', 'East', 'West'], size=100)
-    categories = np.random.choice(['Electronics', 'Clothing', 'Furniture'], size=100)
-    sub_categories = np.random.choice(['Phones', 'Laptops', 'Shirts', 'Chairs'], size=100)
-    sales = np.random.randint(100, 1000, size=100)
-
-    filtered_df = pd.DataFrame({
-        'Region': regions,
-        'Category': categories,
-        'Sub-Category': sub_categories,
-        'Sales': sales
-    })
-
-#     # Hide x-axis line and labels
-#     ax.xaxis.set_visible(False)
-
-    st.subheader("Hierarchical view of Sales using TreeMap")
-    fig3 = px.treemap(filtered_df, path = ["Region","Category","Sub-Category"], values = "Sales",hover_data = ["Sales"],
-                    color = "Sub-Category")
-    fig3.update_layout(width = 800, height = 650)
-    st.plotly_chart(fig3, use_container_width=True)
-with c3:
-     st.write("") 
-#############################################################################################################################
 
 
 ##first row 
-c1, c2 = st.columns((5,5))
-with c1:
-   # Sample data for horizontal bar chart
-    bar_data = pd.DataFrame({
-        'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
-        'Values': [23, 45, 56, 78, 12, 34, 65]
-    })
+# c1, c2 = st.columns((5,5))
+# with c1:
+#    # Sample data for horizontal bar chart
+#     bar_data = pd.DataFrame({
+#         'Category': ['Andorra', 'Belgica', 'Canada', 'Dinamarca', 'Equador', 'França', 'Portugal'],
+#         'Values': [23, 45, 56, 78, 12, 34, 65]
+#     })
 
 #     # Display the bar chart using Streamlit
 #     st.pyplot(fig)
