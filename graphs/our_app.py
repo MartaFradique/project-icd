@@ -131,23 +131,16 @@ with c1:
     fig3.update_layout(width = 800, height = 650)
     fig3.update_traces(textinfo='label+text+value', selector=dict(type='treemap'),textfont=dict(size=15))
     # Add " documents" text after the document count
-    fig3.update_traces(texttemplate='<b>%{label}</b>'+ '<br><b>%{value}</b> documents', selector=dict(type='treemap'))
+    fig3.update_traces(texttemplate='<b>%{label}</b>'+ '<br><b>%{value}</b> papers', selector=dict(type='treemap'))
     fig3.update_traces(marker=dict(cornerradius=5))
     st.plotly_chart(fig3, use_container_width=True)     
 
 
 # first row
-c1, c2, c3, c4 = st.columns((1, 6,2, 1))
-with c1:
-     st.write("") 
-    # # Creating a large white space using an empty placeholder with custom CSS
-    # placeholder = st.empty()
-    # placeholder.markdown(
-    #     '<style>div.css-1l02zno {height: 75px;}</style>',
-    #     unsafe_allow_html=True
-    # )
+c1, c2 = st.columns(( 7,3 ))
 
-with c2:
+
+with c1:
     def generate_wordcloud(data):
         text = ' '.join(data)
         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
@@ -160,7 +153,7 @@ with c2:
     # Streamlit app
     
     # Dropdown menu to select file
-    selected_file = st.selectbox("Select file", unique_countries_lst)
+    selected_file = st.selectbox("Select country", unique_countries_lst)
     lda_model = lda_unique_country(selected_file)
     # file_mapping = {
     #     "Italy": "icd_marta_ana_scopus_edited.csv",
@@ -193,25 +186,10 @@ with c2:
     
 
     generate_wordcloud(topic_words)
-with c3:
-    st.markdown('### Metrics')
 
 
-    with st.container():
-        # Metric 1
-        with st.column():
-            st.metric("Temperature", "70 °F", "1.2 °F")
 
-        # Metric 2
-        with st.column():
-            st.metric("Wind", "9 mph", "-8%")
-
-        # Metric 3
-        with st.column():
-            st.metric("Humidity", "86%", "4%")
-
-
-with c4:
+with c2:
      st.write("") 
     # # Creating a large white space using an empty placeholder with custom CSS
     # placeholder = st.empty()
