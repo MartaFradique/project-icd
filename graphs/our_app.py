@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 import pydeck as pdk
 import plotly.express as px
 from wordcloud import WordCloud
-
+import nltk
+from main2 import unique_countries, lda_unique_country
 from streamlit.components.v1 import components as components
 import folium
 import numpy as np
-
-data_scopus = pd.read_csv('../first-sprint/icd_marta_ana_scopus_edited.csv');
-data_unesco = pd.read_csv('../first-sprint/unesco_heritage_by_country.csv');
+unique_countries_lst = unique_countries()
+data_scopus = pd.read_csv('../first-sprint/icd_marta_ana_scopus_edited.csv')
+data_unesco = pd.read_csv('../first-sprint/unesco_heritage_by_country.csv')
 data_unesco_sorted = data_unesco.sort_values(by="Properties inscribed", ascending=False)
 top_10_data_unesco = data_unesco_sorted.head(10)
 chart_data = pd.DataFrame(data_scopus, columns=['Country'])
@@ -154,30 +155,39 @@ with c2:
     # Streamlit app
     
     # Dropdown menu to select file
-    selected_file = st.selectbox("Select file", ["Italy", "China", "France", "Gemany", "Spain", "India", "Mexico"])
+    selected_file = st.selectbox("Select file", unique_countries_lst)
+    lda_model = lda_unique_country(selected_file)
+    # file_mapping = {
+    #     "Italy": "icd_marta_ana_scopus_edited.csv",
+    #     "China": "scopus3.csv",
+    #     "France": "icd_marta_ana_scopus_edited.csv",
+    #     "Germany": "icd_marta_ana_scopus_edited.csv",
+    #     "Spain": "icd_marta_ana_scopus_edited.csv",
+    #     "India": "icd_marta_ana_scopus_edited.csv",
+    #     "Mexico": "icd_marta_ana_scopus_edited.csv"
+    # }
 
-    file_mapping = {
-        "Italy": "icd_marta_ana_scopus_edited.csv",
-        "China": "scopus3.csv",
-        "France": "icd_marta_ana_scopus_edited.csv",
-        "Germany": "icd_marta_ana_scopus_edited.csv",
-        "Spain": "icd_marta_ana_scopus_edited.csv",
-        "India": "icd_marta_ana_scopus_edited.csv",
-        "Mexico": "icd_marta_ana_scopus_edited.csv"
-    }
-
-    if selected_file in file_mapping:
-        file_path = file_mapping[selected_file]
-    else:
-        st.error("Please select a valid file")
+    # if selected_file in file_mapping:
+    #     file_path = file_mapping[selected_file]
+    # else:
+    #     st.error("Please select a valid file")
 
 
-    data = pd.read_csv(file_path)
-    # st.write(data)  # Display the uploaded data
+    # data = pd.read_csv(file_path)
+    # # st.write(data)  # Display the uploaded data
 
-    text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
-    text_data = data[text_column].dropna().tolist()
-    generate_wordcloud(text_data)
+    # text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
+    # text_data = data[text_column].dropna().tolist()
+    # Assuming lda_model is your trained LDA model
+    topics = lda_model.show_topics()  # Adjust the number of words as needed
+    topic_words = []
+    for topic in topics:
+        words = [word for word, _ in lda_model.show_topic(topic[0])]  # Extract words for the current topic
+        topic_words.extend(words)
+
+    
+
+    generate_wordcloud(topic_words)
 with c3:
     st.markdown('### Metrics')
 
