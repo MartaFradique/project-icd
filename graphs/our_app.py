@@ -4,11 +4,8 @@ import matplotlib.pyplot as plt
 import pydeck as pdk
 import plotly.express as px
 from wordcloud import WordCloud
-<<<<<<< HEAD
 import nltk
 from main2 import unique_countries, lda_unique_country
-=======
->>>>>>> acadcd28be03965b29a39737732bcaa22d4408c8
 from streamlit.components.v1 import components as components
 import numpy as np
 unique_countries_lst = unique_countries()
@@ -163,7 +160,6 @@ with c2:
     # Streamlit app
     
     # Dropdown menu to select file
-<<<<<<< HEAD
     selected_file = st.selectbox("Select file", unique_countries_lst)
     lda_model = lda_unique_country(selected_file)
     # file_mapping = {
@@ -214,32 +210,6 @@ with c3:
         with st.column():
             st.metric("Humidity", "86%", "4%")
 
-=======
-    selected_file = st.selectbox("Select file", ["Italy", "China", "France", "Gemany", "Spain", "India", "Mexico"])
-
-    file_mapping = {
-        "Italy": "icd_marta_ana_scopus_edited.csv",
-        "China": "scopus3.csv",
-        "France": "icd_marta_ana_scopus_edited.csv",
-        "Germany": "icd_marta_ana_scopus_edited.csv",
-        "Spain": "icd_marta_ana_scopus_edited.csv",
-        "India": "icd_marta_ana_scopus_edited.csv",
-        "Mexico": "icd_marta_ana_scopus_edited.csv"
-    }
-
-    if selected_file in file_mapping:
-        file_path = file_mapping[selected_file]
-    else:
-        st.error("Please select a valid file")
-
-
-    data = pd.read_csv(file_path)
-    # st.write(data)  # Display the uploaded data
-
-    text_column = "Title"  # Replace 'YourColumnName' with the actual column containing text data
-    text_data = data[text_column].dropna().tolist()
-    generate_wordcloud(text_data)
->>>>>>> acadcd28be03965b29a39737732bcaa22d4408c8
 
 with c4:
      st.write("") 
