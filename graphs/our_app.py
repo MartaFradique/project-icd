@@ -125,29 +125,37 @@ c1, c2 = st.columns(( 8,2 ))
 
 
 with c1:
-    def generate_wordcloud(data):
-        text = ' '.join(data)
-        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.imshow(wordcloud, interpolation='bilinear')
-        ax.axis('off')
+    def generate_wordcloud(topic_words, topic_index):
+        # Set up a 2x2 grid for subplots
+        fig, axs = plt.subplots(2, 2, figsize=(15, 10))
+        
+        # Flatten the axs array for easy iteration
+        axs = axs.flatten()
+
+        # Generate a wordcloud for each of the first four topics
+        for i, ax in enumerate(axs):
+            if i < len(topics):
+                topic_words = [word for word, _ in lda_model.show_topic(topics[i][0])]
+                text = ' '.join(topic_words)
+                wordcloud = WordCloud(width=400, height=200, background_color='white').generate(text)
+                ax.imshow(wordcloud, interpolation='bilinear')
+                ax.set_title(f"Topic {i + 1}")
+            ax.axis('off')
+        
+        # Adjust layout for better spacing
+        plt.tight_layout()
         st.pyplot(fig)
 
 
     # Streamlit app
     
-    # Dropdown menu to select file
+    # Streamlit app
     selected_file = st.selectbox("Select country", unique_countries_lst)
     lda_model = lda_unique_country(selected_file)
-    topics = lda_model.show_topics()  # Adjust the number of words as needed
-    topic_words = []
-    for topic in topics:
-        words = [word for word, _ in lda_model.show_topic(topic[0])]  # Extract words for the current topic
-        topic_words.extend(words)
-
+    topics = lda_model.show_topics(formatted=False)  # Adjust the number of words as needed
     
-
-    generate_wordcloud(topic_words)
+    # Generate and display wordclouds
+    generate_wordcloud(lda_model, topics)
 
 
 
