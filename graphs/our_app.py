@@ -19,6 +19,10 @@ filtered_sum.columns = ['Country', 'Document Count']
 top_10_data = filtered_sum.head(10)
 merged_data = pd.merge(data_unesco_sorted, filtered_sum, on="Country", suffixes=('_file1', '_file2'))
 top_10_merged_data = merged_data.head(10)
+data_scopus['Cited by'] = pd.to_numeric(data_scopus['Cited by'], errors='coerce')
+# Group by 'Country' and sum the 'Citations' for each group
+citations_country = data_scopus.groupby('Country')['Cited by'].sum().reset_index(name='TotalCitations')
+
 
 
 st.set_page_config(layout='wide', initial_sidebar_state='expanded')
@@ -28,7 +32,7 @@ with open('style.css') as f:
 
 st.title("Recommender Systems in Cultural Heritage Sites")
 
-c1, c2 = st.columns((7, 3))
+c1, c2 = st.columns((8, 2))
 
 with c1:
         countries = top_10_merged_data['Country']
@@ -42,7 +46,7 @@ with c1:
         r = np.arange(len(countries))
 
         # Create the bar plot
-        fig, ax = plt.subplots(figsize=(10, 5))  # Set figure size
+        fig1, ax = plt.subplots(figsize=(10, 5))  # Set figure size
         pastel_colors = plt.cm.get_cmap('Pastel1', len(countries))
 
         ax.bar(r - bar_width/2, info1, color=pastel_colors(0), width=bar_width, edgecolor='grey', label="UNESCO's inscribed properties")
@@ -58,7 +62,7 @@ with c1:
         # ax.set_ylabel('Count', fontweight='bold')
         ax.set_xticks(r)
         ax.set_xticklabels(countries)
-        ax.set_title("Dsitribution of scientific papers and UNESCO's inscribed properties by country")
+        ax.set_title("Distribution of scientific papers and UNESCO's inscribed properties by country")
         ax.legend()
 
         # Hide spines
@@ -66,7 +70,7 @@ with c1:
         ax.spines['right'].set_visible(False)
 
         # Display the chart using Streamlit
-        st.pyplot(fig)
+        st.pyplot(fig1)
 
        
 with c2:
@@ -86,19 +90,38 @@ with c2:
 
 
 
-c1, c2 = st.columns((7, 3))
+c1, c2 = st.columns((8, 2))
+with c2:
+    on = st.toggle('Alternate view')   
 with c1:
-    fig3 = px.treemap(filtered_sum, path = ["Country"], values = "Document Count",hover_data = ["Document Count"],color = "Country")
-    fig3.update_layout(width = 800, height = 650)
-    fig3.update_traces(textinfo='label+text+value', selector=dict(type='treemap'),textfont=dict(size=15))
-    # Add " documents" text after the document count
-    fig3.update_traces(texttemplate='<b>%{label}</b>'+ '<br><b>%{value}</b> papers', selector=dict(type='treemap'))
-    fig3.update_traces(marker=dict(cornerradius=5))
-    st.plotly_chart(fig3, use_container_width=True)     
+    if on:
+        fig3 = px.treemap(filtered_sum, path = ["Country"], values = "Document Count",hover_data = ["Document Count"],color = "Country")
+        fig3.update_layout(width = 800, height = 650)
+        fig3.update_traces(textinfo='label+text+value', selector=dict(type='treemap'),textfont=dict(size=15))
+        # Add " documents" text after the document count
+        fig3.update_traces(texttemplate='<b>%{label}</b>'+ '<br><b>%{value}</b> papers', selector=dict(type='treemap'))
+        fig3.update_traces(marker=dict(cornerradius=5))
+        st.plotly_chart(fig3, use_container_width=True) 
+    else:
+        fig2 = px.choropleth(filtered_sum, locations="Country", locationmode="country names",
+                        hover_name="Country", hover_data=["Document Count"],
+                        labels={'Document Count':'Number of Papers'},
+                        color="Document Count",  # Assigns a unique color to each country
+                        color_continuous_scale="Reds",
+                        projection="natural earth")
+        # Increase the size of the figure
+        fig2.update_layout(width=1000, height=700)
+        
+        # Increase font size for subtitles and annotations
+        fig2.update_layout(
+            font=dict(size=18)
+        )
+        st.plotly_chart(fig2, use_container_width=False)  # Set use_container_width to False
 
+         
 
 # first row
-c1, c2 = st.columns(( 7,3 ))
+c1, c2 = st.columns(( 8,2 ))
 
 
 with c1:
@@ -135,34 +158,27 @@ with c2:
 
 #############################################################################################################################
 
-
-# Sample data: Country names and some dummy data
-data = {
-    'country': ['USA', 'Canada', 'Brazil', 'UK', 'Germany', 'China', 'India'],
-    'info': ['Info about USA', 'Info about Canada', 'Info about Brazil',
-             'Info about UK', 'Info about Germany', 'Info about China', 'Info about India']
-}
-
-df = pd.DataFrame(data)
-
 # Streamlit layout with columns
-c1, c2 = st.columns((1, 9))
+# c1, c2 = st.columns((1, 9))
 
-with c1:
-    st.write("")  # Empty column
-with c2:
+# with c1:
+#     st.write("")  # Empty column
+# with c2:
+#     st.write("")  # Empty column
+
     # Creating the world map
-    fig = px.choropleth(df, locations="country", locationmode="country names",
-                        hover_name="country", hover_data=["info"],
-                        color="country",  # Assigns a unique color to each country
-                        projection="natural earth")
-    # Increase the size of the figure
-    fig.update_layout(width=1200, height=900)
+    # fig = px.choropleth(citations_country, locations="Country", locationmode="country names",
+    #                     hover_name="Country", hover_data=["TotalCitations"],
+    #                     color="TotalCitations",  # Assigns a unique color to each country
+    #                     color_continuous_scale="Reds",
+    #                     projection="natural earth")
+    # # Increase the size of the figure
+    # fig.update_layout(width=1000, height=800)
     
-    # Increase font size for subtitles and annotations
-    fig.update_layout(
-        title_font_size=20,
-        font=dict(size=18)
-    )
+    # # Increase font size for subtitles and annotations
+    # fig.update_layout(
+    #     font=dict(size=18)
+    # )
 
-    st.plotly_chart(fig, use_container_width=False)  # Set use_container_width to False
+    # st.plotly_chart(fig, use_container_width=False)  # Set use_container_width to False
+    
