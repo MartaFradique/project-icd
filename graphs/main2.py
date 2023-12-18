@@ -274,15 +274,15 @@ def preprocess_text(text):
         # In here he is removing the stop words from the text 
         words = [word for word in words if word.lower() not in stop_words]
 
-        # Lemmatization
-        lemmatizer = WordNetLemmatizer()
-        words = [lemmatizer.lemmatize(word) for word in words]
+        ## Lemmatization
+        #lemmatizer = WordNetLemmatizer()
+        #words = [lemmatizer.lemmatize(word) for word in words]
         
 
         
-        # 5. Stemming(reduse the words to their root form ex 'running' -> 'run')
-        stemmer = PorterStemmer()
-        words = [stemmer.stem(word) for word in words]
+        ## 5. Stemming(reduse the words to their root form ex 'running' -> 'run')
+        #stemmer = PorterStemmer()
+        #words = [stemmer.stem(word) for word in words]
         
         # Join the processed words back into a sentence
         processed_text = ' '.join(words)
@@ -757,7 +757,7 @@ def lda_unique_country(country):
         corpus = [id2word.doc2bow(text) for text in processed_texts]
 
         # Set number of topics
-        num_topics = 10
+        num_topics = 4
         lda_model = LdaModel(corpus=corpus, id2word=id2word, num_topics=num_topics, passes=50, alpha=1.0, eta=0.001, per_word_topics=True)
 
 
