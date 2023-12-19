@@ -89,10 +89,10 @@ with c2:
 
 
 
-
+s
 c1, c2 = st.columns((8, 2))
 with c2:
-    on = st.toggle('Alternate view')   
+    on = st.toggle('Treemap View')   
 with c1:
     if on:
         fig3 = px.treemap(filtered_sum, path = ["Country"], values = "Document Count",hover_data = ["Document Count"],color = "Country")
