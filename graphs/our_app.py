@@ -89,7 +89,6 @@ with c2:
 
 
 
-s
 c1, c2 = st.columns((8, 2))
 with c2:
     on = st.toggle('Treemap View')   
